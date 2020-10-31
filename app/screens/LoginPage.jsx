@@ -36,7 +36,6 @@ export default function LoginPage() {
     return (
         <Screen >
             {isLoading && <ActivityIndecator visible={isLoading} />}
-
             <AppForm
                 initialValues={{ phone: '', password: '' }}
                 onSubmit={handleSubmit}
@@ -85,19 +84,6 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingVertical: 5,
     },
-    textClient: {
-        fontSize: 12,
-        paddingVertical: 5,
-        color: colors.medium
-    },
-
-    clinetDriverContaiar: {
-        margin: 5,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-
     logo: {
         width: 200,
         height: 100,
@@ -106,12 +92,9 @@ const styles = StyleSheet.create({
     formContainer: {
         backgroundColor: colors.white,
         width: "95%",
-        height: 200,
         top: "10%",
         alignSelf: 'center',
-        borderWidth: 1,
-        borderColor: colors.gray,
-        borderRadius: 5,
+        borderRadius: 15,
         shadowColor: colors.black,
         shadowOffset: {
             width: 0,
@@ -119,7 +102,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.22,
         shadowRadius: 2.22,
-
         elevation: 3,
     }
 })

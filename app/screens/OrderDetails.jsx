@@ -86,6 +86,24 @@ const OrderDetails = () => {
                             </View>
 
                         </View>
+                        <View
+                            style={{
+                                backgroundColor: colors.black,
+                                width: "95%",
+                                height: 200,
+                                alignSelf: "center",
+                                borderRadius: 1,
+                                shadowColor: "#000",
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 3.84,
+                                elevation: 5,
+                            }}>
+
+                        </View>
                         <TouchableWithoutFeedback onPress={() => startChating(order.id)}>
                             <View style={styles.chatShadow}
                             >

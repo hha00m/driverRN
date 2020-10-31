@@ -9,8 +9,6 @@ import Screen from './../components/Screen'
 import AppPickerCity from './../components/AppPickerCites'
 import Button from './../components/AppButton'
 import useAuth from "../auth/useAuth";
-import getCities from '../api/getCities'
-import getStores from '../api/getStores'
 import getStatues from '../api/getStatues'
 import getOrders from '../api/getOrders'
 import colors from '../config/colors';
@@ -19,10 +17,6 @@ import { handleCopy } from '../utility/helper'
 function Dashboard() {
     let { user } = useAuth();
     const [orders, setOrders] = useState([]);
-    const [cities, setCities] = useState([]);
-    const [city, setCity] = useState(null);
-    const [stores, setStores] = useState([]);
-    const [store, setStore] = useState(null);
     const [statues, setStatues] = useState([]);
     const [status, setStatus] = useState(null);
     const [search, setSearch] = useState("");
@@ -53,32 +47,15 @@ function Dashboard() {
     useEffect(() => {
         setIsLoading(true);
         loadOrders("1");
-    }, [status, city, store]);
+    }, [status]);
 
     useEffect(() => {
         setIsLoading(true);
-        loadCities();
-        loadStores();
         loadStatues();
     }, []);
 
 
-    const loadCities = async () => {
-        const results = await getCities.getCities(user.token);
-        const array = [{
-            name: "الكل",
-            id: ""
-        }];
-        setCities([...array, ...results.data.data]);
-    };
-    const loadStores = async () => {
-        const results = await getStores.getStores(user.token);
-        const array = [{
-            name: "الكل",
-            id: ""
-        }];
-        setStores([...array, ...results.data.data]);
-    };
+
     const loadStatues = async () => {
         const results = await getStatues.getStatues(user.token);
         const array = [{
@@ -120,15 +97,7 @@ function Dashboard() {
                 placeholder='بحث رقم الوصل او رقم الهاتف...' />
             <View
                 style={{ flexDirection: "row-reverse", width: "100%", justifyContent: "space-around", backgroundColor: colors.white, paddingHorizontal: 2 }}>
-                <View style={{ width: "27%", marginHorizontal: 2 }}>
-                    <AppPickerCity items={cities} placeholder={city ? city : "المحافظة"} name="city"
-                        onSelectItem={item => setCity(item)}
-                        selectedItem={city}
-                        icon="city"
-                        backgroundColor={colors.white}
-                        color={colors.white} />
-                </View>
-                <View style={{ width: "27%", marginHorizontal: 2 }}>
+                <View style={{ width: "94%", marginHorizontal: 2 }}>
                     <AppPickerCity placeholder="الحالة" name="town"
                         items={statues}
                         onSelectItem={item => setStatus(item)}
@@ -136,14 +105,7 @@ function Dashboard() {
                         backgroundColor={colors.white}
                         icon="crosshairs-gps" />
                 </View>
-                <View style={{ width: "27%", marginHorizontal: 2 }}>
-                    <AppPickerCity placeholder="صفحة" name="page"
-                        onSelectItem={item => setStore(item)}
-                        selectedItem={store}
-                        items={stores}
-                        backgroundColor={colors.white}
-                        icon="store" />
-                </View>
+
             </View>
             <View style={{
                 alignItems: "center",

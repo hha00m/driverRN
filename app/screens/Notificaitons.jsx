@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
-import Screen from "../components/Screen";
+import ActivityIndecatorLoadingList from "./../components/ActivtyIndectors/ActivityIndecatorLoadingList";
 import { ListItem, ListItemSeparator } from "../components/lists";
 import getNotifications from '../api/getNofification'
-import useAuth from "../auth/useAuth";
-import Routes from '../Routes';
-import colors from "../config/colors";
 import AppText from "../components/AppText";
-// import ActivityIndecator from "../components/ActivtyIndectors/ActivityIndecatorSimpleLine";
-import ActivityIndecatorLoadingList from "./../components/ActivtyIndectors/ActivityIndecatorLoadingList";
+import Screen from "../components/Screen";
+import useAuth from "../auth/useAuth";
+import colors from '../config/colors'
+import Routes from '../Routes';
 
 function NotificationScreen(props) {
     const [messages, setMessages] = useState([]);
