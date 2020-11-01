@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 
 import ActivityIndicator from '../components/ActivtyIndectors/ActivityIndecatorOrderDetails'
 import ListItemOrderDetail from '../components/ListItemOrderDetail'
+import AppPickerReasons from './../components/AppPickerReasons'
 import StatusBottm from '../components/StatusBottom'
 import TrackingBox from '../components/TrackingBox'
 import getOrder from '../api/getOrder'
@@ -15,6 +16,38 @@ import Routes from '../Routes';
 
 
 const OrderDetails = () => {
+    const returnCases = [
+        { value: "لايرد", label: "لايرد" },
+        { value: "لايرد مع رسالة", label: "لايرد مع رسالة" },
+        { value: "تم اغلاق الهاتف", label: "تم اغلاق الهاتف" },
+        { value: "رفض الطلب", label: "رفض الطلب" },
+        { value: "مكرر", label: "مكرر" },
+        { value: "كاذب", label: "كاذب" },
+        { value: "الرقم غير معرف", label: "الرقم غير معرف" },
+        { value: "رفض الطلب", label: "رفض الطلب" },
+        { value: "حظر المندوب", label: "حظر المندوب" },
+        { value: "لايرد بعد التاجيل", label: "لايرد بعد التاجيل" },
+        { value: "مسافر", label: "مسافر" },
+        { value: "تالف", label: "تالف" },
+        { value: "راجع بسبب الحظر", label: "راجع بسبب الحظر" },
+        { value: "لايمكن الاتصال به", label: "لايمكن الاتصال به" },
+        { value: "مغلق بعد الاتفاق", label: "مغلق بعد الاتفاق" },
+        { value: "مستلم سابقا", label: "مستلم سابقا" },
+        { value: "لم يطلب", label: "لم يطلب" },
+        { value: "لايرد بعد سماع المكالمة", label: "لايرد بعد سماع المكالمة" },
+        { value: "غلق بعد سماع المكالمة", label: "غلق بعد سماع المكالمة" },
+        { value: "مغلق", label: "مغلق" },
+        { value: "تم الوصول والرفض", label: "تم الوصول والرفض" },
+        { value: "لايرد بعد الاتفاق", label: "لايرد بعد الاتفاق" },
+        { value: "غير داخل بالخدمة", label: "غير داخل بالخدمة" },
+        { value: "خطأ بالعنوان", label: "خطأ بالعنوان" },
+        { value: "مستلم سابقا", label: "مستلم سابقا" },
+        { value: "خطأ بالتجهيز", label: "خطأ بالتجهيز" },
+        { value: "نقص رقم", label: "نقص رقم" },
+        { value: "زيادة رقم", label: "زيادة رقم" },
+        { value: "وصل بدون طلبية", label: "وصل بدون طلبية" },
+        { value: "الغاء الحجز", label: "الغاء الحجز" }
+    ]
     const route = useRoute();
     let { user } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
@@ -22,6 +55,8 @@ const OrderDetails = () => {
     const navigation = useNavigation();
     const prefix = "DelayedOrders";
     const [amount, onChangeAmount] = React.useState('0');
+    const [note, onChangeNote] = React.useState('');
+    const [returnNo, onChangeReturnNo] = React.useState('');
 
     const [modalVisible, setModalVisible] = useState({
         arrive: false,
@@ -35,11 +70,29 @@ const OrderDetails = () => {
     const loadDetails = async (token, id, notificatin_id = "0") => {
         const results = (await getOrder.getOrder(token, id, notificatin_id));
         setOrder(results.data.data[0]);
+        onChangeAmount(results.data.data[0].price)
         setIsLoading(false);
+    };
+
+    const arrive = async () => {
+        const results = (await getOrder.arrive(user.token, route.params.id, amount, note));
+    };
+    const returned = async () => {
+        const results = (await getOrder.returned(user.token, route.params.id, note.label));
+    };
+    const partReturn = async () => {
+        const results = (await getOrder.partReturn(user.token, route.params.id, amount, note, returnNo));
+    };
+
+    const exchange = async () => {
+        const results = (await getOrder.exchange(user.token, route.params.id, amount, note, returnNo));
+    };
+
+    const postponed = async () => {
+        const results = (await getOrder.postponed(user.token, route.params.id, note));
     };
     useEffect(() => {
         loadDetails(user.token, route.params.id, route.params.notify_id);
-        // loadDetails("5f637eb2b080f5f637eb2b08115f637eb2b08135f637eb2b0814", "198932");
     }, [])
     const handelColor = (id) => {
         switch (id) {
@@ -150,16 +203,25 @@ const OrderDetails = () => {
                                         <Text style={styles.modalText}>تأكيد التوصيل:</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: 100, marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>مبلغ الوصل:</Text>
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeNote(text)}
+                                                value={note}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>ملاحظة:</Text>
                                         </View>
                                         <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
                                             <TouchableHighlight
                                                 style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
                                                 onPress={() => {
+                                                    arrive();
                                                     setModalVisible({ ...modalVisible, arrive: !modalVisible.arrive });
                                                 }}
                                             >
@@ -178,7 +240,6 @@ const OrderDetails = () => {
                                     </View>
                                 </View>
                             </Modal>
-                            {/* -------- */}
                             {/* -----return-------- */}
                             <Modal
                                 animationType="slide"
@@ -188,23 +249,44 @@ const OrderDetails = () => {
                                     Alert.alert("Modal has been closed.");
                                 }}
                             >
-                                <View style={styles.centeredView}>
+                                <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>Hello World!</Text>
+                                        <Text style={styles.modalText}>راجع كلي:</Text>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <View style={{
+                                                width: "60%"
+                                            }}>
+                                                <AppPickerReasons
+                                                    items={returnCases}
+                                                    onSelectItem={item => onChangeNote(item)}
+                                                    selectedItem={note}
+                                                    backgroundColor={colors.white}
+                                                    icon="crosshairs-gps" />
+                                            </View>
+                                        </View>
+                                        <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                                onPress={() => {
+                                                    returned();
+                                                    setModalVisible({ ...modalVisible, return: !modalVisible.return });
+                                                }}
+                                            >
+                                                <Text style={styles.textStyle}>تأكيد</Text>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                onPress={() => {
+                                                    setModalVisible({ ...modalVisible, return: !modalVisible.return });
+                                                }}
+                                            >
+                                                <Text style={{ color: colors.black, alignSelf: "center" }}>ألغاء</Text>
+                                            </TouchableHighlight>
 
-                                        <TouchableHighlight
-                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                                            onPress={() => {
-                                                setModalVisible({ ...modalVisible, return: false });
-                                            }}
-                                        >
-                                            <Text style={styles.textStyle}>Hide Modal</Text>
-                                        </TouchableHighlight>
+                                        </View>
                                     </View>
                                 </View>
                             </Modal>
-                            {/* -------- */}
-
                             {/* -----partreturn-------- */}
                             <Modal
                                 animationType="slide"
@@ -214,18 +296,53 @@ const OrderDetails = () => {
                                     Alert.alert("Modal has been closed.");
                                 }}
                             >
-                                <View style={styles.centeredView}>
+                                <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>Hello World!</Text>
+                                        <Text style={styles.modalText}>راجع جزئي</Text>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeAmount(text)}
+                                                value={amount}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeNote(text)}
+                                                value={note}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}> ملاحظة:</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeReturnNo(text)}
+                                                value={returnNo}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>عدد الرواجع:</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                                onPress={() => {
+                                                    partReturn();
+                                                    setModalVisible({ ...modalVisible, partReturn: !modalVisible.partReturn });
+                                                }}
+                                            >
+                                                <Text style={styles.textStyle}>تأكيد</Text>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                onPress={() => {
+                                                    setModalVisible({ ...modalVisible, partReturn: !modalVisible.partReturn });
+                                                }}
+                                            >
+                                                <Text style={{ color: colors.black, alignSelf: "center" }}>ألغاء</Text>
+                                            </TouchableHighlight>
 
-                                        <TouchableHighlight
-                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                                            onPress={() => {
-                                                setModalVisible({ ...modalVisible, partReturn: false });
-                                            }}
-                                        >
-                                            <Text style={styles.textStyle}>Hide Modal</Text>
-                                        </TouchableHighlight>
+                                        </View>
                                     </View>
                                 </View>
                             </Modal>
@@ -239,22 +356,57 @@ const OrderDetails = () => {
                                     Alert.alert("Modal has been closed.");
                                 }}
                             >
-                                <View style={styles.centeredView}>
+                                <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>Hello World!</Text>
+                                        <Text style={styles.modalText}>أستبدال</Text>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeAmount(text)}
+                                                value={amount}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeNote(text)}
+                                                value={note}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}> ملاحظة:</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeReturnNo(text)}
+                                                value={returnNo}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>عدد القطع:</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                                onPress={() => {
+                                                    exchange();
+                                                    setModalVisible({ ...modalVisible, exchange: !modalVisible.exchange });
+                                                }}
+                                            >
+                                                <Text style={styles.textStyle}>تأكيد</Text>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: colors.light, borderWidth: 1 }}
+                                                onPress={() => {
+                                                    setModalVisible({ ...modalVisible, exchange: !modalVisible.exchange });
+                                                }}
+                                            >
+                                                <Text style={{ color: colors.black, alignSelf: "center" }}>ألغاء</Text>
+                                            </TouchableHighlight>
 
-                                        <TouchableHighlight
-                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                                            onPress={() => {
-                                                setModalVisible({ ...modalVisible, exchange: false });
-                                            }}
-                                        >
-                                            <Text style={styles.textStyle}>Hide Modal</Text>
-                                        </TouchableHighlight>
+                                        </View>
                                     </View>
                                 </View>
                             </Modal>
-                            {/* -------- */}
+
                             {/* -----postpone-------- */}
                             <Modal
                                 animationType="slide"
@@ -264,18 +416,40 @@ const OrderDetails = () => {
                                     Alert.alert("Modal has been closed.");
                                 }}
                             >
-                                <View style={styles.centeredView}>
+                                <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
-                                        <Text style={styles.modalText}>Hello World!</Text>
+                                        <Text style={styles.modalText}> تأجيل:</Text>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <View style={{
+                                                width: "60%"
+                                            }}>
+                                                <TextInput
+                                                    style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                    onChangeText={text => onChangeNote(text)}
+                                                    value={note}
+                                                />
+                                            </View>
+                                        </View>
+                                        <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                                onPress={() => {
+                                                    postponed();
+                                                    setModalVisible({ ...modalVisible, postpone: !modalVisible.postpone });
+                                                }}
+                                            >
+                                                <Text style={styles.textStyle}>تأكيد</Text>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                onPress={() => {
+                                                    setModalVisible({ ...modalVisible, postpone: !modalVisible.postpone });
+                                                }}
+                                            >
+                                                <Text style={{ color: colors.black, alignSelf: "center" }}>ألغاء</Text>
+                                            </TouchableHighlight>
 
-                                        <TouchableHighlight
-                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                                            onPress={() => {
-                                                setModalVisible({ ...modalVisible, postpone: false });
-                                            }}
-                                        >
-                                            <Text style={styles.textStyle}>Hide Modal</Text>
-                                        </TouchableHighlight>
+                                        </View>
                                     </View>
                                 </View>
                             </Modal>
