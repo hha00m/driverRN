@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native'
-import { Image } from 'react-native-animatable'
+import { Modal, Image, TextInput, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, TouchableHighlight, View } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 
+import ActivityIndicator from '../components/ActivtyIndectors/ActivityIndecatorOrderDetails'
 import ListItemOrderDetail from '../components/ListItemOrderDetail'
-import colors from '../config/colors'
+import StatusBottm from '../components/StatusBottom'
 import TrackingBox from '../components/TrackingBox'
 import getOrder from '../api/getOrder'
 import useAuth from "../auth/useAuth";
+import colors from '../config/colors'
 import Routes from '../Routes';
-import ActivityIndicator from '../components/ActivtyIndectors/ActivityIndecatorOrderDetails'
 
 
 
@@ -21,6 +21,16 @@ const OrderDetails = () => {
     const [order, setOrder] = useState(null);
     const navigation = useNavigation();
     const prefix = "DelayedOrders";
+    const [amount, onChangeAmount] = React.useState('0');
+
+    const [modalVisible, setModalVisible] = useState({
+        arrive: false,
+        return: false,
+        partReturn: false,
+        exchange: false,
+        postpone: false
+    });
+
 
     const loadDetails = async (token, id, notificatin_id = "0") => {
         const results = (await getOrder.getOrder(token, id, notificatin_id));
@@ -86,9 +96,10 @@ const OrderDetails = () => {
                             </View>
 
                         </View>
+                        {/* ----------------------- */}
                         <View
                             style={{
-                                backgroundColor: colors.black,
+                                backgroundColor: colors.white,
                                 width: "95%",
                                 height: 200,
                                 alignSelf: "center",
@@ -102,8 +113,18 @@ const OrderDetails = () => {
                                 shadowRadius: 3.84,
                                 elevation: 5,
                             }}>
-
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                <StatusBottm color="success" title="واصل" onPress={() => setModalVisible({ ...modalVisible, arrive: true })} />
+                                <StatusBottm color="returned" title="راجع كلي" onPress={() => setModalVisible({ ...modalVisible, return: true })} />
+                                <StatusBottm color="returned" title="راجع جزئي" onPress={() => setModalVisible({ ...modalVisible, partReturn: true })} />
+                            </View>
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                <StatusBottm color="secondery" title="استبدال" onPress={() => setModalVisible({ ...modalVisible, exchange: true })} />
+                                <StatusBottm color="pause" title="مؤجل" onPress={() => setModalVisible({ ...modalVisible, postpone: true })} />
+                            </View>
                         </View>
+                        {/* ----------------------- */}
+
                         <TouchableWithoutFeedback onPress={() => startChating(order.id)}>
                             <View style={styles.chatShadow}
                             >
@@ -113,20 +134,205 @@ const OrderDetails = () => {
                         <ScrollView >
                             {order.tracking.map((item) =>
                                 <TrackingBox key={`${prefix}_item.order_no`} bgColor={handelColor(item.order_status_id)} item={item} />)}
+
+
+                            {/* -----arrive-------- */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible.arrive}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                }}
+                            >
+                                <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>تأكيد التوصيل:</Text>
+                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                            <TextInput
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: 100, marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                onChangeText={text => onChangeAmount(text)}
+                                                value={amount}
+                                            />
+                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>مبلغ الوصل:</Text>
+                                        </View>
+                                        <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                                onPress={() => {
+                                                    setModalVisible({ ...modalVisible, arrive: !modalVisible.arrive });
+                                                }}
+                                            >
+                                                <Text style={styles.textStyle}>تأكيد</Text>
+                                            </TouchableHighlight>
+                                            <TouchableHighlight
+                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                onPress={() => {
+                                                    setModalVisible({ ...modalVisible, arrive: !modalVisible.arrive });
+                                                }}
+                                            >
+                                                <Text style={{ color: colors.black, alignSelf: "center" }}>ألغاء</Text>
+                                            </TouchableHighlight>
+
+                                        </View>
+                                    </View>
+                                </View>
+                            </Modal>
+                            {/* -------- */}
+                            {/* -----return-------- */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible.return}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                }}
+                            >
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Hello World!</Text>
+
+                                        <TouchableHighlight
+                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                            onPress={() => {
+                                                setModalVisible({ ...modalVisible, return: false });
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Hide Modal</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+                            </Modal>
+                            {/* -------- */}
+
+                            {/* -----partreturn-------- */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible.partReturn}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                }}
+                            >
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Hello World!</Text>
+
+                                        <TouchableHighlight
+                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                            onPress={() => {
+                                                setModalVisible({ ...modalVisible, partReturn: false });
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Hide Modal</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+                            </Modal>
+                            {/* -------- */}
+                            {/* -----exchange-------- */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible.exchange}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                }}
+                            >
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Hello World!</Text>
+
+                                        <TouchableHighlight
+                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                            onPress={() => {
+                                                setModalVisible({ ...modalVisible, exchange: false });
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Hide Modal</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+                            </Modal>
+                            {/* -------- */}
+                            {/* -----postpone-------- */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisible.postpone}
+                                onRequestClose={() => {
+                                    Alert.alert("Modal has been closed.");
+                                }}
+                            >
+                                <View style={styles.centeredView}>
+                                    <View style={styles.modalView}>
+                                        <Text style={styles.modalText}>Hello World!</Text>
+
+                                        <TouchableHighlight
+                                            style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                                            onPress={() => {
+                                                setModalVisible({ ...modalVisible, postpone: false });
+                                            }}
+                                        >
+                                            <Text style={styles.textStyle}>Hide Modal</Text>
+                                        </TouchableHighlight>
+                                    </View>
+                                </View>
+                            </Modal>
+                            {/* -------- */}
+
+
                         </ScrollView>
                     </View>
                     :
                     <ActivityIndicator visable={isLoading} />
                 }
             </View >
-        </ScrollView>
+        </ScrollView >
     )
 }
 
 export default OrderDetails
 
 const styles = StyleSheet.create({
-
+    centeredView: {
+        backgroundColor: colors.black,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5
+    },
+    openButton: {
+        backgroundColor: "#F194FF",
+        borderRadius: 20,
+        padding: 10,
+        marginHorizontal: 10,
+        elevation: 2,
+        width: 70,
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    },
     headerDetails: {
         width: "90%",
         height: "100%",
