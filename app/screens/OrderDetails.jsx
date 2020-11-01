@@ -201,15 +201,17 @@ const OrderDetails = () => {
                                 <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}>تأكيد التوصيل:</Text>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }} >
+
                                             <TextInput
                                                 style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
                                             />
+
                                             <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
                                         </View>
-                                        <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }} >
                                             <TextInput
                                                 style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeNote(text)}
@@ -228,7 +230,7 @@ const OrderDetails = () => {
                                                 <Text style={styles.textStyle}>تأكيد</Text>
                                             </TouchableHighlight>
                                             <TouchableHighlight
-                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                style={{ ...styles.openButton, backgroundColor: colors.light, borderWidth: 1 }}
                                                 onPress={() => {
                                                     setModalVisible({ ...modalVisible, arrive: !modalVisible.arrive });
                                                 }}
