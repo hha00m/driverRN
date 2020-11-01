@@ -27,7 +27,7 @@ const pdfViewerScreen = () => {
                 withScroll={true}
 
                 source={{
-                    uri: `${settings.apiUrl}/../../dash/invoice/${route.params.item.path}`,
+                    uri: `${settings.apiUrl}/../../dash/driver_invoice/${route.params.item.path}`,
                 }}
             />
 

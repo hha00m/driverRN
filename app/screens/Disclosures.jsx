@@ -96,16 +96,7 @@ function Dashboard() {
                         icon="calendar" />
                 </View>
 
-                <View style={{ width: "25%", marginHorizontal: 2 }}>
-                    <AppPickerCity
-                        placeholder="صفحة"
-                        name="page"
-                        onSelectItem={item => setStore(item)}
-                        selectedItem={store}
-                        items={stores}
-                        backgroundColor={colors.white}
-                        icon="store" />
-                </View>
+
             </View>
             <View style={{
                 alignItems: "center",
@@ -125,8 +116,8 @@ function Dashboard() {
                                     <Text style={{ paddingHorizontal: 10 }}> {(total.orders)}</Text>
                                 </View>
                                 <View style={{ flexDirection: "row-reverse" }}>
-                                    <Text style={{ paddingHorizontal: 10 }}>صافي الحساب:</Text>
-                                    <Text style={{ paddingHorizontal: 10 }}> {total.client_price && numberWithCommas(total.client_price)}</Text>
+                                    <Text style={{ paddingHorizontal: 10 }}>صافي للمندوب:</Text>
+                                    <Text style={{ paddingHorizontal: 10 }}> {total.dev && numberWithCommas(total.dev)}</Text>
                                 </View>
                             </>
                         }

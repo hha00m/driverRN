@@ -201,23 +201,23 @@ const OrderDetails = () => {
                                 <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}>تأكيد التوصيل:</Text>
-                                        <View style={{ flexDirection: "row", alignItems: "center" }} >
+                                        <View style={{ flexDirection: "row", alignItems: "center", width: "100%" }} >
 
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
                                             />
 
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}>المبلغ المستلم :</Text>
                                         </View>
-                                        <View style={{ flexDirection: "row", alignItems: "center" }} >
+                                        <View style={{ flexDirection: "row", alignItems: "center", width: "100%" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeNote(text)}
                                                 value={note}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>ملاحظة:</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}>ملاحظة:</Text>
                                         </View>
                                         <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
                                             <TouchableHighlight
@@ -294,36 +294,34 @@ const OrderDetails = () => {
                                 animationType="slide"
                                 transparent={true}
                                 visible={modalVisible.partReturn}
-                                onRequestClose={() => {
-                                    Alert.alert("Modal has been closed.");
-                                }}
+
                             >
                                 <View style={styles.centeredView} onPress={() => console.log("model pressed cencel")}>
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}>راجع جزئي</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
+                                            <Text style={{ textAlign: "right", width: "30%", }}>المبلغ المستلم :</Text>
                                         </View>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeNote(text)}
                                                 value={note}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}> ملاحظة:</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}> ملاحظة:</Text>
                                         </View>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeReturnNo(text)}
                                                 value={returnNo}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>عدد الرواجع:</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}>عدد الرواجع:</Text>
                                         </View>
                                         <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
                                             <TouchableHighlight
@@ -336,7 +334,7 @@ const OrderDetails = () => {
                                                 <Text style={styles.textStyle}>تأكيد</Text>
                                             </TouchableHighlight>
                                             <TouchableHighlight
-                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                style={{ ...styles.openButton, backgroundColor: colors.light, borderWidth: 1 }}
                                                 onPress={() => {
                                                     setModalVisible({ ...modalVisible, partReturn: !modalVisible.partReturn });
                                                 }}
@@ -348,7 +346,6 @@ const OrderDetails = () => {
                                     </View>
                                 </View>
                             </Modal>
-                            {/* -------- */}
                             {/* -----exchange-------- */}
                             <Modal
                                 animationType="slide"
@@ -363,27 +360,27 @@ const OrderDetails = () => {
                                         <Text style={styles.modalText}>أستبدال</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>المبلغ المستلم :</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}>المبلغ المستلم :</Text>
                                         </View>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeNote(text)}
                                                 value={note}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}> ملاحظة:</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}> ملاحظة:</Text>
                                         </View>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                             <TextInput
-                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeReturnNo(text)}
                                                 value={returnNo}
                                             />
-                                            <Text style={{ textAlign: "right", marginLeft: 8 }}>عدد القطع:</Text>
+                                            <Text style={{ textAlign: "right", width: "30%" }}>عدد القطع:</Text>
                                         </View>
                                         <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
                                             <TouchableHighlight
@@ -422,14 +419,13 @@ const OrderDetails = () => {
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}> تأجيل:</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
-                                            <View style={{
-                                                width: "60%"
-                                            }}>
+                                            <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
                                                 <TextInput
-                                                    style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "60%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
+                                                    style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                     onChangeText={text => onChangeNote(text)}
                                                     value={note}
                                                 />
+                                                <Text style={{ textAlign: "right", width: "30%" }}> ملاحظة:</Text>
                                             </View>
                                         </View>
                                         <View style={{ flexDirection: "row-reverse", justifyContent: "space-around", alignItems: "center" }}>
@@ -443,7 +439,7 @@ const OrderDetails = () => {
                                                 <Text style={styles.textStyle}>تأكيد</Text>
                                             </TouchableHighlight>
                                             <TouchableHighlight
-                                                style={{ ...styles.openButton, backgroundColor: colors.light }}
+                                                style={{ ...styles.openButton, backgroundColor: colors.light, borderWidth: 1 }}
                                                 onPress={() => {
                                                     setModalVisible({ ...modalVisible, postpone: !modalVisible.postpone });
                                                 }}
