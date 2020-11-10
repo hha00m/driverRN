@@ -91,7 +91,7 @@ function OrderCard({ item, onPress, renderRightActions }) {
             </View>
           </TouchableHighlight>
           <TouchableHighlight
-            onPress={() => Linking.openURL(`tel:${item.driver_phone}`)}
+            onPress={() => Linking.openURL(`tel:${item.client_phone}`)}
           >
             <Icon
               backgroundColor={handelColor(item.order_status_id)}

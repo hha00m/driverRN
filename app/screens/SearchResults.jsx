@@ -65,6 +65,8 @@ function Dashboard() {
 
     const loadCities = async () => {
         const results = await getCities.getCities(user.token);
+        if (!results.ok)
+            return;
         const array = [{
             name: "الكل",
             id: ""
@@ -73,6 +75,8 @@ function Dashboard() {
     };
     const loadStores = async () => {
         const results = await getStores.getStores(user.token);
+        if (!results.ok)
+            return;
         const array = [{
             name: "الكل",
             id: ""
@@ -81,6 +85,8 @@ function Dashboard() {
     };
     const loadStatues = async () => {
         const results = await getStatues.getStatues(user.token);
+        if (!results.ok)
+            return;
         const array = [{
             name: "الكل",
             id: ""

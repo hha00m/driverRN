@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Image, TextInput, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, TouchableHighlight, View } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import { TextInputMask } from 'react-native-masked-text'
+import uuid from 'uuid/v4';
 
 import ActivityIndicator from '../components/ActivtyIndectors/ActivityIndecatorOrderDetails'
 import ListItemOrderDetail from '../components/ListItemOrderDetail'
@@ -20,7 +22,6 @@ const OrderDetails = () => {
         { value: "لايرد", label: "لايرد" },
         { value: "لايرد مع رسالة", label: "لايرد مع رسالة" },
         { value: "تم اغلاق الهاتف", label: "تم اغلاق الهاتف" },
-        { value: "رفض الطلب", label: "رفض الطلب" },
         { value: "مكرر", label: "مكرر" },
         { value: "كاذب", label: "كاذب" },
         { value: "الرقم غير معرف", label: "الرقم غير معرف" },
@@ -32,7 +33,6 @@ const OrderDetails = () => {
         { value: "راجع بسبب الحظر", label: "راجع بسبب الحظر" },
         { value: "لايمكن الاتصال به", label: "لايمكن الاتصال به" },
         { value: "مغلق بعد الاتفاق", label: "مغلق بعد الاتفاق" },
-        { value: "مستلم سابقا", label: "مستلم سابقا" },
         { value: "لم يطلب", label: "لم يطلب" },
         { value: "لايرد بعد سماع المكالمة", label: "لايرد بعد سماع المكالمة" },
         { value: "غلق بعد سماع المكالمة", label: "غلق بعد سماع المكالمة" },
@@ -53,7 +53,6 @@ const OrderDetails = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [order, setOrder] = useState(null);
     const navigation = useNavigation();
-    const prefix = "DelayedOrders";
     const [amount, onChangeAmount] = React.useState('0');
     const [note, onChangeNote] = React.useState('');
     const [returnNo, onChangeReturnNo] = React.useState('');
@@ -68,6 +67,7 @@ const OrderDetails = () => {
 
 
     const loadDetails = async (token, id, notificatin_id = "0") => {
+        setIsLoading(true);
         const results = (await getOrder.getOrder(token, id, notificatin_id));
         setOrder(results.data.data[0]);
         onChangeAmount(results.data.data[0].price)
@@ -75,21 +75,31 @@ const OrderDetails = () => {
     };
 
     const arrive = async () => {
+        setIsLoading(true);
         const results = (await getOrder.arrive(user.token, route.params.id, amount, note));
+        loadDetails(user.token, route.params.id);
     };
     const returned = async () => {
+        setIsLoading(true);
         const results = (await getOrder.returned(user.token, route.params.id, note.label));
+        loadDetails(user.token, route.params.id);
     };
     const partReturn = async () => {
+        setIsLoading(true);
         const results = (await getOrder.partReturn(user.token, route.params.id, amount, note, returnNo));
+        loadDetails(user.token, route.params.id);
     };
 
     const exchange = async () => {
+        setIsLoading(true);
         const results = (await getOrder.exchange(user.token, route.params.id, amount, note, returnNo));
+        loadDetails(user.token, route.params.id);
     };
 
     const postponed = async () => {
+        setIsLoading(true);
         const results = (await getOrder.postponed(user.token, route.params.id, note));
+        loadDetails(user.token, route.params.id);
     };
     useEffect(() => {
         loadDetails(user.token, route.params.id, route.params.notify_id);
@@ -114,8 +124,8 @@ const OrderDetails = () => {
                 return colors.medium;
         }
     };
-    const startChating = (id) => {
-        navigation.navigate(Routes.CHAT_MODEL, { id: id })
+    const startChating = (item) => {
+        navigation.navigate(Routes.CHAT_MODEL, { item: item })
     }
     return (
         <ScrollView
@@ -143,52 +153,49 @@ const OrderDetails = () => {
                                 {order.client_price && <ListItemOrderDetail caption="السعر الصافي" details={order.client_price} />}
                                 {order.price && <ListItemOrderDetail caption="مبلغ الوصل" details={order.price} />}
                                 {order.new_price && <ListItemOrderDetail caption="المبلغ المستلم" details={order.new_price} />}
-                                {order.driver_name && <ListItemOrderDetail caption="أسم المندوب" details={order.driver_name} />}
-                                {order.driver_phone && <ListItemOrderDetail onPress={true} caption="هاتف المندوب" details={order.driver_phone} />}
-                                {order.driver_phone && <ListItemOrderDetail caption="تم التحاسب؟" details={order.money_status === "1" ? "نعم" : "كلا"} />}
+                                {order.driver_name && <ListItemOrderDetail caption="أسم العميل" details={order.client_name} />}
+                                {order.client_phone && <ListItemOrderDetail onPress={true} caption="هاتف العميل" details={order.client_phone} />}
+                                {order.money_status && <ListItemOrderDetail caption="تم التحاسب؟" details={order.money_status === "1" ? "نعم" : "كلا"} />}
                             </View>
 
                         </View>
+                        {/* ---------626802-------------- */}
+                        {order.driver_invoice_id === "0" && order.invoice_id == "0" &&
+                            <View
+                                style={{
+                                    backgroundColor: colors.white,
+                                    width: "95%",
+                                    height: 200,
+                                    alignSelf: "center",
+                                    borderRadius: 1,
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.25,
+                                    shadowRadius: 3.84,
+                                    elevation: 5,
+                                }}>
+                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                    <StatusBottm color="success" title="واصل" onPress={() => setModalVisible({ ...modalVisible, arrive: true })} />
+                                    <StatusBottm color="returned" title="راجع كلي" onPress={() => setModalVisible({ ...modalVisible, return: true })} />
+                                    <StatusBottm color="returned" title="راجع جزئي" onPress={() => setModalVisible({ ...modalVisible, partReturn: true })} />
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                    <StatusBottm color="secondery" title="استبدال" onPress={() => setModalVisible({ ...modalVisible, exchange: true })} />
+                                    <StatusBottm color="pause" title="مؤجل" onPress={() => setModalVisible({ ...modalVisible, postpone: true })} />
+                                </View>
+                            </View>}
                         {/* ----------------------- */}
-                        <View
-                            style={{
-                                backgroundColor: colors.white,
-                                width: "95%",
-                                height: 200,
-                                alignSelf: "center",
-                                borderRadius: 1,
-                                shadowColor: "#000",
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 3.84,
-                                elevation: 5,
-                            }}>
-                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                                <StatusBottm color="success" title="واصل" onPress={() => setModalVisible({ ...modalVisible, arrive: true })} />
-                                <StatusBottm color="returned" title="راجع كلي" onPress={() => setModalVisible({ ...modalVisible, return: true })} />
-                                <StatusBottm color="returned" title="راجع جزئي" onPress={() => setModalVisible({ ...modalVisible, partReturn: true })} />
-                            </View>
-                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                                <StatusBottm color="secondery" title="استبدال" onPress={() => setModalVisible({ ...modalVisible, exchange: true })} />
-                                <StatusBottm color="pause" title="مؤجل" onPress={() => setModalVisible({ ...modalVisible, postpone: true })} />
-                            </View>
-                        </View>
-                        {/* ----------------------- */}
-
-                        <TouchableWithoutFeedback onPress={() => startChating(order.id)}>
-                            <View style={styles.chatShadow}
-                            >
+                        <TouchableWithoutFeedback onPress={() => startChating(order)}>
+                            <View style={styles.chatShadow}>
                                 <Image style={styles.chatIcon} source={require("./../assets/icons/chatIcon.png")} />
                             </View>
                         </TouchableWithoutFeedback>
                         <ScrollView >
                             {order.tracking.map((item) =>
-                                <TrackingBox key={`${prefix}_item.order_no`} bgColor={handelColor(item.order_status_id)} item={item} />)}
-
-
+                                <TrackingBox key={`${item.order_status_id}${uuid()}`} bgColor={handelColor(item.order_status_id)} item={item} />)}
                             {/* -----arrive-------- */}
                             <Modal
                                 animationType="slide"
@@ -203,7 +210,15 @@ const OrderDetails = () => {
                                         <Text style={styles.modalText}>تأكيد التوصيل:</Text>
                                         <View style={{ flexDirection: "row", alignItems: "center", width: "100%" }} >
 
-                                            <TextInput
+                                            <TextInputMask
+                                                type={'money'}
+                                                options={{
+                                                    precision: 0,
+                                                    separator: '.',
+                                                    delimiter: ',',
+                                                    unit: '',
+                                                }}
+
                                                 style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
@@ -300,7 +315,14 @@ const OrderDetails = () => {
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}>راجع جزئي</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
-                                            <TextInput
+                                            <TextInputMask
+                                                type={'money'}
+                                                options={{
+                                                    precision: 0,
+                                                    separator: '.',
+                                                    delimiter: ',',
+                                                    unit: '',
+                                                }}
                                                 style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
@@ -359,7 +381,14 @@ const OrderDetails = () => {
                                     <View style={styles.modalView}>
                                         <Text style={styles.modalText}>أستبدال</Text>
                                         <View style={{ flexDirection: "row", justifyContent: "space-around", alignItems: "center" }} >
-                                            <TextInput
+                                            <TextInputMask
+                                                type={'money'}
+                                                options={{
+                                                    precision: 0,
+                                                    separator: '.',
+                                                    delimiter: ',',
+                                                    unit: '',
+                                                }}
                                                 style={{ height: 40, borderColor: 'gray', borderBottomWidth: 1, width: "70%", marginBottom: 10, backgroundColor: colors.lightGreen, textAlign: "right" }}
                                                 onChangeText={text => onChangeAmount(text)}
                                                 value={amount}
@@ -405,7 +434,6 @@ const OrderDetails = () => {
                                     </View>
                                 </View>
                             </Modal>
-
                             {/* -----postpone-------- */}
                             <Modal
                                 animationType="slide"
@@ -451,9 +479,6 @@ const OrderDetails = () => {
                                     </View>
                                 </View>
                             </Modal>
-                            {/* -------- */}
-
-
                         </ScrollView>
                     </View>
                     :
@@ -577,15 +602,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 1,
         borderColor: colors.medium,
-        shadowColor: colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
 
-        elevation: 5,
     },
     titleStore: {
         fontSize: 22,

@@ -13,22 +13,23 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.alnahr.driverAlbarq",
-      "buildNumber": "1.0.2"
+      "buildNumber": "1.0.0"
     },
     "android": {
-      "adaptiveIcon": {
-        "backgroundColor": "#FFFFFF",
-        "useNextNotificationsApi": true,
-        "package": "com.alnahr.driverAlbarq",
-        "versionCode": 3
-      }
+      "backgroundColor": "#FFFFFF",
+      "useNextNotificationsApi": true,
+      "package": "com.alnahr.driverAlbarq",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

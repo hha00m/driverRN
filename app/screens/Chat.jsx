@@ -18,10 +18,7 @@ function NotificationScreen(props) {
     const [isLoading, setIsLoading] = useState(false);
     let { user } = useAuth();
 
-    const config = {
-        velocityThreshold: 0.3,
-        directionalOffsetThreshold: 80
-    };
+
 
     const loadNotification = async () => {
         setIsLoading(true);
@@ -51,7 +48,7 @@ function NotificationScreen(props) {
                         seen={item.client_seen === "1" ? colors.white : colors.unseen}
                         image={item.client_seen === "1" ? require("../assets/notifications/chatBlue.png") : require("../assets/notifications/chatRed.png")}
                         onPress={() =>
-                            navigator.navigate(Routes.CHAT_MODEL, { id: item.id })
+                            navigator.navigate(Routes.CHAT_MODEL, { item: item })
                         }
                     />
                 )}

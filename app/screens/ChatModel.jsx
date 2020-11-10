@@ -10,6 +10,7 @@ import getMessages from './../api/getMessages'
 import Screen from './../components/Screen'
 import useAuth from "../auth/useAuth";
 import colors from '../config/colors'
+import { Text } from 'react-native-animatable'
 
 const ChatModel = () => {
 
@@ -26,7 +27,7 @@ const ChatModel = () => {
         setIsLoading(false);
     };
     useEffect(() => {
-        loadMessages(user.token, route.params.id);
+        loadMessages(user.token, route.params.item.id);
     }, [])
 
     const sendMessages = async (token, id, message) => {
@@ -51,7 +52,6 @@ const ChatModel = () => {
                         onChangeText={message => onChangeText(message)}
                         value={value}
                         multiline
-
                         onPress={() => sendMessages(user.token, route.params.id, value)}
                     />
                 </View>
@@ -60,13 +60,26 @@ const ChatModel = () => {
                         <FlatList
                             style={{ flex: 1 }}
                             data={messages}
-                            // inverted={-1}
                             keyExtractor={(item) => `${item.id}_${item.message}`.toString()}
                             renderItem={({ item }) => (
                                 item.is_client === "1" ? <Sender item={item} /> : <Reciever item={item} />
                             )}
                         />
                     }
+                </View>
+                <View style={{
+                    backgroundColor: colors.white,
+                    width: "100%",
+                    height: 50,
+                    borderRadius: 20,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}>
+                    <Text
+                        style={{
+                            fontSize: 18
+                        }}>{route.params.item.order_no}</Text>
                 </View>
             </View>
         </Screen>
