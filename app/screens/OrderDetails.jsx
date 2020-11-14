@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal, Image, TextInput, ScrollView, StyleSheet, Text, TouchableWithoutFeedback, TouchableHighlight, View } from 'react-native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { TextInputMask } from 'react-native-masked-text'
+import Toast from '@rimiti/react-native-toastify';
 import uuid from 'uuid/v4';
 
 import ActivityIndicator from '../components/ActivtyIndectors/ActivityIndecatorOrderDetails'
@@ -9,6 +10,7 @@ import ListItemOrderDetail from '../components/ListItemOrderDetail'
 import AppPickerReasons from './../components/AppPickerReasons'
 import StatusBottm from '../components/StatusBottom'
 import TrackingBox from '../components/TrackingBox'
+import { handleCopy } from '../utility/helper'
 import getOrder from '../api/getOrder'
 import useAuth from "../auth/useAuth";
 import colors from '../config/colors'
@@ -77,28 +79,33 @@ const OrderDetails = () => {
     const arrive = async () => {
         setIsLoading(true);
         const results = (await getOrder.arrive(user.token, route.params.id, amount, note));
+        handleCopy(null, "تم تحديث الحالة")
         loadDetails(user.token, route.params.id);
     };
     const returned = async () => {
         setIsLoading(true);
         const results = (await getOrder.returned(user.token, route.params.id, note.label));
+        handleCopy(null, "تم تحديث الحالة")
         loadDetails(user.token, route.params.id);
     };
     const partReturn = async () => {
         setIsLoading(true);
         const results = (await getOrder.partReturn(user.token, route.params.id, amount, note, returnNo));
+        handleCopy(null, "تم تحديث الحالة")
         loadDetails(user.token, route.params.id);
     };
 
     const exchange = async () => {
         setIsLoading(true);
         const results = (await getOrder.exchange(user.token, route.params.id, amount, note, returnNo));
+        handleCopy(null, "تم تحديث الحالة")
         loadDetails(user.token, route.params.id);
     };
 
     const postponed = async () => {
         setIsLoading(true);
         const results = (await getOrder.postponed(user.token, route.params.id, note));
+        handleCopy(null, "تم تحديث الحالة")
         loadDetails(user.token, route.params.id);
     };
     useEffect(() => {
@@ -128,9 +135,8 @@ const OrderDetails = () => {
         navigation.navigate(Routes.CHAT_MODEL, { item: item })
     }
     return (
-        <ScrollView
-
-        >
+        <ScrollView >
+            <Toast position={"center"} ref={(c) => this.toastify = c} />
             <View style={{ flex: 1, marginBottom: 10, paddingBottom: 5 }}>
                 {order ?
                     <View style={{ flex: 1, marginBottom: 10, paddingBottom: 5 }}>

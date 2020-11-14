@@ -40,8 +40,11 @@ function Dashboard() {
     }
     //================================================
     useEffect(() => {
+        setRefreshing(true);
         setIsLoading(true);
         loadOrders("1");
+        setRefreshing(false);
+
     }, []);
     //================================================
     const onEndReachedMohamed = () => {
@@ -70,7 +73,7 @@ function Dashboard() {
     //================================================
     return (
         <View style={{ flex: 1 }}>
-            <Toast ref={(c) => this.toastify = c} />
+            <Toast position={"center"} ref={(c) => this.toastify = c} />
             <AppFormField
                 rightIcon='table-search'
                 autoCapitalize="none"
@@ -96,6 +99,11 @@ function Dashboard() {
                     <OrderCard
                         item={item}
                         renderRightActions={() =>
+                            <ListOrderCopyAction icon="content-copy"
+                                onPress={() => handleCopy(item)}
+                            />
+                        }
+                        renderLeftActions={() =>
                             <ListOrderCopyAction icon="content-copy"
                                 onPress={() => handleCopy(item)}
                             />

@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialIcons, Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import Profile from "./../screens/Profile";
@@ -15,8 +16,9 @@ import navitation from "../navigations/rootNavigation";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { Platform } from "react-native";
+const Tab = createMaterialBottomTabNavigator();
 
-const Tab = createBottomTabNavigator();
+// const Tab = createBottomTabNavigator();
 const AppNavigator = (ref) => {
   const { user } = useAuth();
   useEffect(() => {
@@ -47,11 +49,18 @@ const AppNavigator = (ref) => {
     }
   };
   return (
+    // <Tab.Navigator
+    //   // activeColor={colors.primery}
+    //   // style={{ backgroundColor: colors.primery }}
+    //
+    //   // style={{ backgroundColor: "tomato" }}
+    //   // screenOptions={{ headerShown: false }}
+    // >
     <Tab.Navigator
-      activeColor={colors.primery}
-      style={{ backgroundColor: colors.primery }}
       initialRouteName={Routes.DASHBOARD}
-      // screenOptions={{ headerShown: false }}
+      activeColor="#f0edf6"
+      inactiveColor={colors.medium}
+      barStyle={{ backgroundColor: colors.black }}
     >
       <Tab.Screen
         name={Routes.SEARCH_RESULTS}
@@ -59,7 +68,7 @@ const AppNavigator = (ref) => {
         options={{
           tabBarLabel: "بحث",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="search" color={color} size={size} />
+            <FontAwesome name="search" color={color} size={22} />
           ),
         }}
       />
@@ -69,7 +78,7 @@ const AppNavigator = (ref) => {
         options={{
           tabBarLabel: "اشعاراتي",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="md-notifications" color={color} size={size} />
+            <Ionicons name="md-notifications" color={color} size={22} />
           ),
         }}
       />
@@ -79,7 +88,7 @@ const AppNavigator = (ref) => {
         options={({ navigation }) => ({
           tabBarLabel: "لوحة التحكم",
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="home" color={color} size={size} />
+            <FontAwesome name="home" color={color} size={22} />
           ),
           // tabBarButton: () => (
           //   <DashboardButton
@@ -95,7 +104,7 @@ const AppNavigator = (ref) => {
         options={{
           tabBarLabel: "محادثتي",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="ios-chatbubbles" color={color} size={size} />
+            <Ionicons name="ios-chatbubbles" color={color} size={22} />
           ),
         }}
       />
@@ -105,7 +114,7 @@ const AppNavigator = (ref) => {
         options={{
           tabBarLabel: "حسابي",
           tabBarIcon: ({ color, size }) => (
-            <MaterialIcons name="account-circle" color={color} size={size} />
+            <MaterialIcons name="account-circle" color={color} size={22} />
           ),
         }}
       />

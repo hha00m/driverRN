@@ -31,7 +31,10 @@ function OrderCard({ item, onPress, renderRightActions }) {
     }
   };
   return (
-    <Swipeable renderRightActions={renderRightActions}>
+    <Swipeable
+      renderRightActions={renderRightActions}
+      renderLeftActions={renderRightActions}
+    >
       <View
         style={{
           alignSelf: "center",
