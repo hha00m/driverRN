@@ -1,27 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import ActivityIndecator from '../ActivtyIndectors/ActivityIndecatorSquers';
-import getStatistic from '../../api/getSummayBoxed'
 import SummaryBox from './SummaryBox';
 import AppText from '../AppText';
 
-const SummaryBoxes = () => {
-    const [oneDay, setOneDay] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    let { user } = useAuth();
-
-    const loadStatic = async () => {
-        setIsLoading(true);
-        const results = (await getStatistic.get(user.token));
-        setOneDay(results.data.data[0]);
-        setIsLoading(false);
-    };
-
-    useEffect(() => {
-        loadStatic();
-    }, []);
-
+const SummaryBoxes = ({ oneDay, isLoading }) => {
 
     return (
         <>
